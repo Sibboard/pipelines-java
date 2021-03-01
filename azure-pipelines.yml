@@ -6,8 +6,20 @@
 trigger:
 - master
 
+#building across multiple platforms
+strategy:
+  matrix:
+    linux:
+      imageName: "ubuntu-16.04"
+    mac:
+      imageName: "macos-10.14"
+    windows:
+      imageName: "vs2017-win2016"
+  maxParallel: 3
+
 pool:
-  vmImage: ubuntu-latest
+  vmImage: $(imageName)
+#end multiple platforms
 
 steps:
 - task: Maven@3
@@ -21,6 +33,7 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
+#publishing details on tests
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: "JaCoCo"
